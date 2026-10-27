@@ -212,9 +212,10 @@ $("guardar").addEventListener("click",async()=>{
   ?await db.from("products").update(registro).eq("id",id)
   :await db.from("products").insert(registro);
  if(resultado.error){
-  $("adminMsg").textContent="No se pudo guardar. Comprueba que tu usuario tenga permisos de administrador.";
-  console.error(resultado.error);return;
- }
+  $("adminMsg").textContent="Error: "+resultado.error.message;
+  console.error(resultado.error);
+  return;
+}
  $("adminMsg").textContent="Producto guardado correctamente.";
  limpiarFormulario();await cargarProductos();await cargarAdmin();
 });
