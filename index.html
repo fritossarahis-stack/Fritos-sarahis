@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <title>Pizzería y Fritos Sarahís</title>
+  <style>
+    :root {
+      --negro: #111111;
+      --dorado: #D9A441;
+      --blanco: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--negro);
+      color: var(--blanco);
+      font-family: Arial, sans-serif;
+    }
+    header {
+      text-align: center;
+      padding: 28px 16px;
+      border-bottom: 2px solid var(--dorado);
+    }
+    h1 { color: var(--dorado); margin: 0 0 8px; }
+    header p { margin: 0; }
+    main { max-width: 850px; margin: auto; padding: 16px; }
+    h2 { color: var(--dorado); }
+    #productos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .producto {
+      background: #202020;
+      border: 1px solid #59451f;
+      border-radius: 12px;
+      padding: 15px;
+    }
+    .producto img {
+      width: 100%;
+      height: 155px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .precio { color: var(--dorado); font-weight: bold; }
+    button, select {
+      padding: 11px;
+      border-radius: 7px;
+      border: 0;
+      font-size: 15px;
+    }
+    button {
+      background: var(--dorado);
+      color: #111;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .producto button { width: 100%; margin-top: 8px; }
+    .pedido {
+      margin-top: 24px;
+      padding: 16px;
+      background: #202020;
+      border-radius: 12px;
+    }
+    #servicio { width: 100%; margin: 8px 0 14px; }
+    #enviar { width: 100%; }
+    #aviso { color: var(--dorado); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🍕 Pizzería y Fritos Sarahís</h1>
+    <p>Pizza, fritos y mucho sabor</p>
+  </header>
+
+  <main>
+    <h2>🍽️ Nuestro menú</h2>
+    <p id="estado">Cargando productos...</p>
+    <section id="productos"></section>
+
+    <section class="pedido">
+      <h2>🛒 Tu pedido</h2>
+      <div id="carrito">Todavía no has agregado productos.</div>
+      <p><strong>Total: <span id="total">$0</span></strong></p>
+
+      <label for="servicio">¿Cómo deseas recibir tu pedido?</label>
+      <select id="servicio">
+        <option value="">Selecciona una opción</option>
+        <option value="Comer en el local">Comer en el local</option>
+        <option value="Recoger en el local">Recoger en el local</option>
+        <option value="Domicilio">Domicilio</option>
+      </select>
+
+      <button id="enviar">Enviar pedido por WhatsApp</button>
+      <p id="aviso"></p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://ncfgdnsfjoesjwffnjtp.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_GylbgLtvi-yzxuYJm2Y9Ag_YCsVfO1x";
+    const WHATSAPP = "584146489828";
+
+    const db = window.supabase.createClient(
+      SUPABASE_URL, SUPABASE_KEY
+    );
+
+    let productos = [];
+    let carrito = [];
+
+    const dinero = valor =>
+      new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "COP",
+        maximumFractionDigits: 0
+      }).format(valor);
+
+    async function cargarProductos() {
+      const estado = document.getElementById("estado");
+      const { data, error } = await db
+        .from("products")
+        .select("id,name,description,price,category,image_url")
+        .eq("active", true)
+        .order("name");
+
+      if (error) {
+        estado.textContent =
+          "No se pudo cargar el menú. Revisa la conexión con Supabase.";
+        console.error(error);
+        return;
+      }
+
+      productos = data || [];
+      estado.textContent = productos.length
+        ? "Elige tus favoritos:"
+        : "Todavía no hay productos publicados.";
+
+      const zona = document.getElementById("productos");
+      zona.replaceChildren();
+
+      productos.forEach(p => {
+        const tarjeta = document.createElement("article");
+        tarjeta.className = "producto";
+
+        if (p.image_url) {
+          const img = document.createElement("img");
+          img.src = p.image_url;
+          img.alt = p.name;
+          tarjeta.append(img);
+        }
+
+        const nombre = document.createElement("h3");
+        nombre.textContent = p.name;
+        tarjeta.append(nombre);
+
+        const descripcion = document.createElement("p");
+        descripcion.textContent = p.description || "";
+        tarjeta.append(descripcion);
+
+        const precio = document.createElement("p");
+        precio.className = "precio";
+        precio.textContent = dinero(Number(p.price));
+        tarjeta.append(precio);
+
+        const boton = document.createElement("button");
+        boton.textContent = "Agregar al pedido";
+        boton.addEventListener("click", () => agregar(p.id));
+        tarjeta.append(boton);
+        zona.append(tarjeta);
+      });
+    }
+
+    function agregar(id) {
+      const p = productos.find(item => item.id === id);
+      if (!p) return;
+      const existente = carrito.find(item => item.id === id);
+      if (existente) existente.cantidad++;
+      else carrito.push({
+        id: p.id,
+        nombre: p.name,
+        precio: Number(p.price),
+        cantidad: 1
+      });
+      mostrarCarrito();
+    }
+
+    function mostrarCarrito() {
+      const zona = document.getElementById("carrito");
+      zona.replaceChildren();
+
+      if (!carrito.length) {
+        zona.textContent = "Todavía no has agregado productos.";
+      }
+
+      carrito.forEach(item => {
+        const fila = document.createElement("p");
+        fila.textContent =
+          `${item.nombre} x ${item.cantidad} — ` +
+          dinero(item.precio * item.cantidad);
+
+        const quitar = document.createElement("button");
+        quitar.textContent = "Quitar uno";
+        quitar.addEventListener("click", () => {
+          item.cantidad--;
+          if (item.cantidad <= 0) {
+            carrito = carrito.filter(p => p.id !== item.id);
+          }
+          mostrarCarrito();
+        });
+        fila.append(" ", quitar);
+        zona.append(fila);
+      });
+
+      const total = carrito.reduce(
+        (suma, item) => suma + item.precio * item.cantidad, 0
+      );
+      document.getElementById("total").textContent = dinero(total);
+    }
+
+    document.getElementById("enviar").addEventListener("click", () => {
+      const servicio = document.getElementById("servicio").value;
+      const aviso = document.getElementById("aviso");
+
+      if (!carrito.length) {
+        aviso.textContent = "Agrega al menos un producto.";
+        return;
+      }
+      if (!servicio) {
+        aviso.textContent = "Selecciona cómo deseas recibir tu pedido.";
+        return;
+      }
+
+      const total = carrito.reduce(
+        (suma, item) => suma + item.precio * item.cantidad, 0
+      );
+      let mensaje = "Hola, Pizzería y Fritos Sarahís. Quiero hacer este pedido:\n\n";
+
+      carrito.forEach(item => {
+        mensaje += `${item.nombre} x ${item.cantidad}: ` +
+          `${dinero(item.precio * item.cantidad)}\n`;
+      });
+
+      mensaje += `\nTotal: ${dinero(total)}\nServicio: ${servicio}`;
+      mensaje += "\n\nPor favor, confirmen mi pedido.";
+
+      const url = "https://wa.me/" + WHATSAPP +
+        "?text=" + encodeURIComponent(mensaje);
+      window.open(url, "_blank");
+    });
+
+    cargarProductos();
+  </script>
+</body>
+</html>
