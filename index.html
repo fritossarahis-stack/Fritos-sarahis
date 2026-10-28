@@ -1,227 +1,62 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#111111">
-<title>Pizzería y Fritos Sarahís</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#171717">
+<title>Pizzería y Fritos Sarahís</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#111;--gold:#D9A441;--panel:#202020;--white:#fff}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,sans-serif}
-header{text-align:center;padding:25px 14px;border-bottom:2px solid var(--gold)}
-h1,h2{color:var(--gold)}
-main{max-width:900px;margin:auto;padding:16px}
-button,input,textarea{padding:11px;border-radius:7px;font-size:15px}
-button{border:0;background:var(--gold);color:#111;font-weight:bold;cursor:pointer;margin:4px 2px}
-input,textarea{width:100%;margin:5px 0 12px;background:#fff;color:#111;border:1px solid #aaa}
-label{display:block}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.card,.panel{background:var(--panel);border:1px solid #59451f;border-radius:12px;padding:14px;margin:12px 0}
-.card img{width:100%;height:160px;object-fit:cover;border-radius:8px}
-.price{color:var(--gold);font-weight:bold}
-.hidden{display:none}
-small,.muted{color:#ccc}
-</style>
-</head>
+:root{--gold:#d9a441;--ink:#191919;--bg:#f7f5f0;--line:#e8e1d4}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.wrap{width:min(100% - 28px,1000px);margin:auto}.hero{background:#171717;color:white;padding:24px 0;border-bottom:4px solid var(--gold)}.brand{display:flex;gap:12px;align-items:center}.logo{background:var(--gold);border-radius:16px;padding:13px;font-size:28px}.brand h1{margin:0;color:#f5cb72;font-size:clamp(21px,5vw,30px)}.brand p{margin:5px 0 0;color:#ddd}.search{width:100%;margin-top:18px;padding:13px;border:1px solid #555;border-radius:13px;background:#292929;color:white}.main{padding:22px 0 100px}.cats{display:flex;gap:8px;overflow:auto;padding:8px 0 14px}.cat{border:1px solid var(--line);border-radius:99px;background:white;padding:10px 15px;white-space:nowrap;font-weight:700}.cat.active{background:var(--gold);border-color:var(--gold)}h2{font-size:21px;margin:8px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{border:1px solid var(--line);background:white;border-radius:17px;overflow:hidden;box-shadow:0 6px 20px #0000000a;display:flex;flex-direction:column}.photo{width:100%;aspect-ratio:1.2;object-fit:cover;background:#eee5d3}.placeholder{width:100%;aspect-ratio:1.2;display:grid;place-items:center;background:#eee5d3;font-size:44px}.body{padding:12px;display:flex;flex-direction:column;gap:7px;flex:1}.body h3{margin:0;font-size:16px}.desc{font-size:12px;color:#777;min-height:32px;margin:0;line-height:1.4}.foot{display:flex;justify-content:space-between;align-items:center;gap:5px;margin-top:auto}.price{font-weight:800}.add,.dark{border:0;border-radius:10px;padding:9px 11px;background:#191919;color:white;font-weight:700}.empty{background:white;border:1px dashed var(--line);border-radius:14px;padding:24px;text-align:center;grid-column:1/-1;color:#777}.cartbar{position:fixed;bottom:12px;left:12px;right:12px;max-width:620px;margin:auto;background:#171717;color:white;border:0;border-radius:15px;padding:14px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 30px #0004}.cartbar[hidden]{display:none}.gold{color:#f5cb72}.adminlink{display:block;margin:28px auto 0;border:1px solid #ddd;background:white;border-radius:8px;padding:8px;color:#666;font-size:12px}.footnote{text-align:center;color:#777;font-size:12px;padding:15px}.overlay{display:none;position:fixed;inset:0;background:#0008;z-index:10;align-items:flex-end;justify-content:center}.overlay.open{display:flex}.sheet{background:white;border-radius:22px 22px 0 0;padding:18px;width:min(620px,100%);max-height:92vh;overflow:auto}.sheethead{display:flex;justify-content:space-between;align-items:center}.sheethead h2{margin:0}.close{border:0;border-radius:50%;width:36px;height:36px;font-size:22px}.field{display:grid;gap:5px;margin:12px 0}.field label{font-weight:700;font-size:13px}.field input,.field textarea,.field select{width:100%;border:1px solid #ddd;border-radius:10px;padding:11px;background:white}.field textarea{min-height:70px}.btn{border:0;border-radius:11px;padding:12px;font-weight:750}.primary{background:var(--gold);color:#171717}.light{background:#eee;color:#222}.block{width:100%;margin-top:8px}.notice{font-size:12px;color:#777}.item{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.qty{display:flex;align-items:center;gap:7px}.qty button{border:1px solid #ddd;border-radius:7px;background:white;width:29px;height:29px}.status{font-size:13px;overflow-wrap:anywhere}.error{color:#b42318}.ok{color:#177245}.adminrow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}.adminrow small{display:block;color:#777}.mini{border:1px solid #ddd;background:white;border-radius:7px;padding:6px;font-size:12px}.adminbox{border:1px solid var(--line);border-radius:13px;padding:12px;margin:12px 0}.rowbtn{display:flex;gap:7px;flex-wrap:wrap}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.overlay{align-items:center;padding:15px}.sheet{border-radius:22px}.body{padding:15px}.body h3{font-size:18px}}
+@media(max-width:360px){.grid{grid-template-columns:1fr}.card{display:grid;grid-template-columns:38% 1fr}.photo,.placeholder{height:100%;min-height:140px;aspect-ratio:auto}}
+</style></head>
 <body>
-<header>
-<h1>🍕 Pizzería y Fritos Sarahís</h1>
-<p>Pizza, fritos y mucho sabor</p>
-</header>
-
-<main>
-<section>
-<h2>🍽️ Nuestro menú</h2>
-<p id="estado">Cargando menú...</p>
-<div id="productos" class="grid"></div>
-</section>
-
-<section class="panel">
-<h2>🛒 Tu pedido</h2>
-<div id="carrito">Todavía no agregas productos.</div>
-<p><b>Total: <span id="total">$0</span></b></p>
-<label for="servicio">¿Cómo deseas recibir tu pedido?</label>
-<select id="servicio" style="width:100%;padding:11px;margin:8px 0 14px">
-<option value="">Selecciona una opción</option>
-<option>Comer en el local</option>
-<option>Recoger en el local</option>
-<option>Domicilio</option>
-</select>
-<button id="enviar">Enviar pedido por WhatsApp</button>
-<p id="aviso"></p>
-</section>
-
-<hr>
-<section class="panel">
-<h2>🔐 Administración</h2>
-<p>Solo el administrador autorizado puede gestionar el menú.</p>
-<div id="login">
-<label>Correo electrónico</label>
-<input id="correo" type="email" autocomplete="username" placeholder="Tu correo de administrador">
-<label>Contraseña</label>
-<input id="clave" type="password" autocomplete="current-password" placeholder="Tu contraseña">
-<button id="entrar">Iniciar sesión</button>
-<p id="loginMsg"></p>
-</div>
-
-<div id="admin" class="hidden">
-<p>Sesión de administrador iniciada.</p>
-<button id="salir">Cerrar sesión</button>
-<h2 id="formTitulo">Agregar producto</h2>
-<input id="pid" type="hidden">
-<label>Nombre del producto</label>
-<input id="nombre" placeholder="Ej.: Pizza hawaiana">
-<label>Descripción</label>
-<textarea id="descripcion" placeholder="Ingredientes o detalles"></textarea>
-<label>Precio en pesos</label>
-<input id="precio" type="number" min="0" step="1" placeholder="Ej.: 18000">
-<label>Categoría</label>
-<input id="categoria" placeholder="Ej.: Pizzas, Fritos, Bebidas">
-<label>URL de la foto (opcional)</label>
-<input id="foto" type="url" placeholder="https://...">
-<label><input id="activo" type="checkbox" checked style="width:auto"> Producto activo y visible</label>
-<button id="guardar">Guardar producto</button>
-<button id="nuevo">Limpiar formulario</button>
-<p id="adminMsg"></p>
-<h2>Productos registrados</h2>
-<div id="listaAdmin"></div>
-</div>
-</section>
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<header class="hero"><div class="wrap"><div class="brand"><div class="logo">🍕</div><div><h1 id="businessName">Pizzería y Fritos Sarahís</h1><p id="tagline">Pizza, fritos y mucho sabor</p></div></div><input id="search" class="search" placeholder="🔎 ¿Qué se te antoja hoy?" type="search"></div></header>
+<main class="wrap main"><h2>Explora nuestro menú</h2><p class="notice">Toca una categoría para ver sus productos.</p><nav id="categories" class="cats"></nav><h2 id="catTitle">Todos los productos</h2><p id="count" class="notice"></p><section id="menu" class="grid"><div class="empty">Cargando menú…</div></section><p class="footnote">Gracias por elegirnos ❤️</p><button id="openAdmin" class="adminlink">Acceso administrador</button></main>
+<button id="cartbar" class="cartbar" hidden><span>🛒 <b id="cartcount">0</b> · Ver mi pedido</span><b class="gold" id="cartbarTotal">$0</b></button>
+<div class="overlay" id="cartOverlay"><section class="sheet"><div class="sheethead"><h2>🛒 Tu pedido</h2><button class="close" data-close="cartOverlay">×</button></div><div id="cartItems"></div><h3 id="cartTotal">Total: $0</h3><button id="checkoutGo" class="btn primary block">Continuar con el pedido</button><button class="btn light block" data-close="cartOverlay">Seguir viendo el menú</button></section></div>
+<div class="overlay" id="checkoutOverlay"><section class="sheet"><div class="sheethead"><h2>📦 ¿Cómo lo recibirás?</h2><button class="close" data-close="checkoutOverlay">×</button></div><form id="checkoutForm"><div class="field"><label>Tipo de servicio *</label><select id="service" required><option value="">Selecciona</option><option>Comer en el local</option><option>Retirar en el local</option><option>Delivery</option></select></div><div class="field"><label>Tu nombre *</label><input id="customer" required maxlength="80" placeholder="¿Cómo te llamas?"></div><div class="field"><label>Dirección o referencia (si aplica)</label><input id="address" maxlength="180" placeholder="Dirección o zona"></div><div class="field"><label>Nota (opcional)</label><textarea id="note" maxlength="500" placeholder="Indicaciones especiales"></textarea></div><button class="btn primary block" type="submit">Enviar pedido por WhatsApp</button></form></section></div>
+<div class="overlay" id="adminOverlay"><section class="sheet"><div class="sheethead"><h2>🔐 Administración</h2><button class="close" data-close="adminOverlay">×</button></div><div id="loginBox"><p class="notice">Inicia sesión con tu cuenta administradora.</p><form id="loginForm"><div class="field"><label>Correo electrónico</label><input id="email" type="email" required autocomplete="username"></div><div class="field"><label>Contraseña</label><input id="password" type="password" required autocomplete="current-password"></div><button class="btn dark block">Iniciar sesión</button></form></div><div id="adminPanel" hidden><div class="rowbtn"><button id="newProduct" class="btn primary">＋ Nuevo producto</button><button id="logout" class="btn light">Cerrar sesión</button></div><p id="adminMsg" class="status"></p><div id="editor" class="adminbox" hidden><h3 id="editorTitle">Nuevo producto</h3><form id="productForm"><input id="pid" type="hidden"><div class="field"><label>Nombre *</label><input id="pname" required maxlength="100" placeholder="Pizza de queso"></div><div class="field"><label>Descripción</label><textarea id="pdesc" maxlength="500"></textarea></div><div class="field"><label>Precio *</label><input id="pprice" type="number" min="0" step="0.01" required></div><div class="field"><label>Categoría *</label><input id="pcat" required maxlength="70" list="catOptions" placeholder="Pizzas"><datalist id="catOptions"><option>Pizzas</option><option>Pastelitos</option><option>Empanadas</option><option>Tequeños</option><option>Fritos</option><option>Bebidas</option><option>Postres</option></datalist></div><div class="field"><label>Enlace público de foto (opcional)</label><input id="pimage" type="url" maxlength="1000" placeholder="https://..."></div><div class="field"><label><input id="pactive" type="checkbox" checked style="width:auto"> Producto activo (visible)</label></div><div class="rowbtn"><button class="btn primary">Guardar producto</button><button id="cancelEdit" type="button" class="btn light">Cancelar</button></div></form></div><div class="adminbox"><h3>Productos del menú</h3><div id="adminProducts">Cargando…</div></div></div></section></div>
 <script>
+(()=>{"use strict";
 const SUPABASE_URL="https://ncfgdnsfjoesjwffnjtp.supabase.co";
 const SUPABASE_KEY="sb_publishable_GylbgLtvi-yzxuYJm2Y9Ag_YCsVfO1x";
-const WHATSAPP="584146489828";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let productos=[],carrito=[];
-
-const $=id=>document.getElementById(id);
-const dinero=n=>new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0}).format(n);
-function texto(tag,contenido){const el=document.createElement(tag);el.textContent=contenido??"";return el;}
-
-async function cargarProductos(){
- $("estado").textContent="Cargando menú...";
- const {data,error}=await db.from("products")
-  .select("id,name,description,price,category,image_url,active")
-  .eq("active",true).order("name");
- if(error){$("estado").textContent="No se pudo cargar el menú. Revisa la conexión.";console.error(error);return;}
- productos=data||[];
- $("estado").textContent=productos.length?"Elige tus favoritos:":"Todavía no hay productos publicados.";
- const zona=$("productos");zona.replaceChildren();
- productos.forEach(p=>{
-  const c=document.createElement("article");c.className="card";
-  if(p.image_url){const img=document.createElement("img");img.src=p.image_url;img.alt=p.name;c.append(img);}
-  c.append(texto("h3",p.name),texto("p",p.description||""));
-  const precio=texto("p",dinero(Number(p.price)));precio.className="price";c.append(precio);
-  const btn=texto("button","Agregar al pedido");btn.addEventListener("click",()=>agregar(p.id));c.append(btn);
-  zona.append(c);
- });
-}
-function agregar(id){
- const p=productos.find(x=>x.id===id);if(!p)return;
- const en=carrito.find(x=>x.id===id);
- if(en)en.cantidad++;else carrito.push({id:p.id,nombre:p.name,precio:Number(p.price),cantidad:1});
- mostrarCarrito();
-}
-function mostrarCarrito(){
- const zona=$("carrito");zona.replaceChildren();
- if(!carrito.length)zona.textContent="Todavía no agregas productos.";
- carrito.forEach(item=>{
-  const fila=document.createElement("p");
-  fila.append(texto("span",`${item.nombre} × ${item.cantidad}: ${dinero(item.precio*item.cantidad)} `));
-  const btn=texto("button","Quitar uno");
-  btn.addEventListener("click",()=>{item.cantidad--;if(item.cantidad<=0)carrito=carrito.filter(x=>x.id!==item.id);mostrarCarrito();});
-  fila.append(btn);zona.append(fila);
- });
- $("total").textContent=dinero(carrito.reduce((s,x)=>s+x.precio*x.cantidad,0));
-}
-$("enviar").addEventListener("click",()=>{
- if(!carrito.length){$("aviso").textContent="Agrega al menos un producto.";return;}
- const servicio=$("servicio").value;
- if(!servicio){$("aviso").textContent="Selecciona cómo deseas recibir el pedido.";return;}
- const total=carrito.reduce((s,x)=>s+x.precio*x.cantidad,0);
- let msg="Hola, Pizzería y Fritos Sarahís. Quiero hacer este pedido:\n\n";
- carrito.forEach(x=>msg+=`${x.nombre} × ${x.cantidad}: ${dinero(x.precio*x.cantidad)}\n`);
- msg+=`\nTotal: ${dinero(total)}\nServicio: ${servicio}\n\nPor favor, confirmen mi pedido.`;
- window.open("https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(msg),"_blank");
-});
-
-function mostrarSesion(user){
- $("login").classList.toggle("hidden",!!user);
- $("admin").classList.toggle("hidden",!user);
- if(user)cargarAdmin();
-}
-async function comprobarSesion(){
- const {data}=await db.auth.getSession();
- mostrarSesion(data.session?.user||null);
-}
-$("entrar").addEventListener("click",async()=>{
- $("loginMsg").textContent="Comprobando acceso...";
- const {data,error}=await db.auth.signInWithPassword({email:$("correo").value.trim(),password:$("clave").value});
- if(error){$("loginMsg").textContent="No se pudo iniciar sesión. Comprueba tu correo y contraseña.";return;}
- $("clave").value="";$("loginMsg").textContent="";
- mostrarSesion(data.user);
-});
-$("salir").addEventListener("click",async()=>{await db.auth.signOut();mostrarSesion(null);});
-db.auth.onAuthStateChange((_event,session)=>mostrarSesion(session?.user||null));
-
-function limpiarFormulario(){
- ["pid","nombre","descripcion","precio","categoria","foto"].forEach(id=>$(id).value="");
- $("activo").checked=true;$("formTitulo").textContent="Agregar producto";
-}
-$("nuevo").addEventListener("click",limpiarFormulario);
-
-async function cargarAdmin(){
- const {data,error}=await db.from("products")
-  .select("id,name,description,price,category,image_url,active").order("name");
- if(error){$("adminMsg").textContent="No se pudo cargar la lista. Verifica los permisos de administrador.";return;}
- const zona=$("listaAdmin");zona.replaceChildren();
- (data||[]).forEach(p=>{
-  const card=document.createElement("div");card.className="card";
-  card.append(texto("strong",p.name+" — "+dinero(Number(p.price))+" "+(p.active?"(Activo)":"(Inactivo)")));
-  const editar=texto("button","Editar");editar.addEventListener("click",()=>{
-   $("pid").value=p.id;$("nombre").value=p.name;$("descripcion").value=p.description||"";
-   $("precio").value=p.price;$("categoria").value=p.category||"";$("foto").value=p.image_url||"";
-   $("activo").checked=!!p.active;$("formTitulo").textContent="Editar producto";
-   window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
-  });
-  const cambiar=texto("button",p.active?"Desactivar":"Activar");
-  cambiar.addEventListener("click",()=>cambiarEstado(p.id,!p.active));
-  const borrar=texto("button","Eliminar");
-  borrar.addEventListener("click",()=>eliminar(p.id));
-  card.append(editar,cambiar,borrar);zona.append(card);
- });
-}
-$("guardar").addEventListener("click",async()=>{
- $("adminMsg").textContent="";
- const nombre=$("nombre").value.trim(),precio=Number($("precio").value);
- if(!nombre||$("precio").value===""||!Number.isFinite(precio)||precio<0){
-  $("adminMsg").textContent="Escribe el nombre y un precio válido.";return;
- }
- const registro={
-  name:nombre,description:$("descripcion").value.trim(),
-  price:precio,category:$("categoria").value.trim()||"General",
-  image_url:$("foto").value.trim()||null,active:$("activo").checked
- };
- const id=$("pid").value;
- const resultado=id
-  ?await db.from("products").update(registro).eq("id",id)
-  :await db.from("products").insert(registro);
- if(resultado.error){
-  $("adminMsg").textContent="Error: "+resultado.error.message;
-  console.error(resultado.error);
-  return;
-}
- $("adminMsg").textContent="Producto guardado correctamente.";
- limpiarFormulario();await cargarProductos();await cargarAdmin();
-});
-async function cambiarEstado(id,active){
- const {error}=await db.from("products").update({active}).eq("id",id);
- if(error){$("adminMsg").textContent="No se pudo cambiar el estado.";return;}
+const WHATSAPP_PHONE="584146489828";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY),$=id=>document.getElementById(id);
+let products=[],cart=new Map(),category="Todos",adminUser=null;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=n=>new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0}).format(Number(n)||0);
+function emoji(c){c=String(c||"").toLowerCase();if(c.includes("pizza"))return"🍕";if(c.includes("pastel")||c.includes("empan"))return"🥟";if(c.includes("teque"))return"🧀";if(c.includes("bebida")||c.includes("jugo"))return"🥤";if(c.includes("postre"))return"🍰";if(c.includes("frit"))return"🍟";return"🍽️"}
+function status(m,type=""){ $("adminMsg").textContent=m;$("adminMsg").className="status "+type}
+function open(id){$(id).classList.add("open");document.body.style.overflow="hidden"}
+function close(id){$(id).classList.remove("open");if(!document.querySelector(".overlay.open"))document.body.style.overflow=""}
+document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>close(b.dataset.close));
+document.querySelectorAll(".overlay").forEach(o=>o.onclick=e=>{if(e.target===o)close(o.id)});
+async function settings(){const {data,error}=await db.from("menu_settings").select("*").limit(1).maybeSingle();if(!error&&data){if(data.business_name)$("businessName").textContent=data.business_name;if(data.tagline)$("tagline").textContent=data.tagline;if(/^#[0-9a-f]{6}$/i.test(data.brand_color||""))document.documentElement.style.setProperty("--gold",data.brand_color)}}
+async function loadProducts(){const {data,error}=await db.from("products").select("id,name,description,price,category,image_url,active").eq("active",true).order("name");if(error){$("menu").innerHTML='<div class="empty">No pudimos cargar el menú. Actualiza la página.</div>';console.error(error);return}products=data||[];renderCats();renderMenu()}
+function renderCats(){let cats=["Todos",...new Set(products.map(p=>(p.category||"Otros").trim()).filter(Boolean))];if(!cats.includes(category))category="Todos";$("categories").innerHTML=cats.map(c=>`<button class="cat ${category===c?"active":""}" data-cat="${esc(c)}">${c==="Todos"?"✨":emoji(c)} ${esc(c)}</button>`).join("");$("categories").querySelectorAll("button").forEach(b=>b.onclick=()=>{category=b.dataset.cat;renderCats();renderMenu()})}
+function renderMenu(){let q=$("search").value.trim().toLowerCase();let list=products.filter(p=>(category==="Todos"||(p.category||"Otros").trim()===category)&&[p.name,p.description,p.category].some(v=>String(v||"").toLowerCase().includes(q)));$("catTitle").textContent=category==="Todos"?"Todos los productos":category;$("count").textContent=`${list.length} producto(s)`;if(!list.length){$("menu").innerHTML='<div class="empty">No hay productos en esta categoría todavía ❤️</div>';return}$("menu").innerHTML=list.map(p=>`<article class="card">${p.image_url?`<img class="photo" src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy" onerror="this.outerHTML='<div class=&quot;placeholder&quot;>🍽️</div>'">`:`<div class="placeholder">${emoji(p.category)}</div>`}<div class="body"><h3>${esc(p.name)}</h3><p class="desc">${esc(p.description||"Preparado con mucho sabor.")}</p><div class="foot"><span class="price">${money(p.price)}</span><button class="add" data-add="${esc(p.id)}">+ Agregar</button></div></div></article>`).join("");$("menu").querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>add(b.dataset.add))}
+$("search").addEventListener("input",renderMenu);
+function add(id){let p=products.find(x=>String(x.id)===String(id));if(!p)return;let item=cart.get(String(id));cart.set(String(id),{p,qty:(item?.qty||0)+1});renderCart()}
+function total(){let t=0;cart.forEach(i=>t+=Number(i.p.price)*i.qty);return t}
+function renderCart(){let n=0;cart.forEach(i=>n+=i.qty);$("cartbar").hidden=!n;$("cartcount").textContent=n;$("cartbarTotal").textContent=money(total());let items=[...cart.values()];$("cartItems").innerHTML=items.length?items.map(({p,qty})=>`<div class="item"><div><b>${esc(p.name)}</b><br><small>${money(p.price)} c/u</small><br><b>${money(Number(p.price)*qty)}</b></div><div class="qty"><button data-minus="${esc(p.id)}">−</button><b>${qty}</b><button data-plus="${esc(p.id)}">+</button></div></div>`).join(""):'<p class="notice">Tu carrito está vacío.</p>';$("cartTotal").textContent="Total: "+money(total());$("cartItems").querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>qty(b.dataset.minus,-1));$("cartItems").querySelectorAll("[data-plus]").forEach(b=>b.onclick=()=>qty(b.dataset.plus,1))}
+function qty(id,d){let i=cart.get(String(id));if(!i)return;i.qty+=d;if(i.qty<=0)cart.delete(String(id));renderCart()}
+$("cartbar").onclick=()=>{renderCart();open("cartOverlay")};$("checkoutGo").onclick=()=>{if(!cart.size){alert("Agrega un producto primero.");return}close("cartOverlay");open("checkoutOverlay")};
+$("checkoutForm").onsubmit=e=>{e.preventDefault();if(!cart.size)return;let lines=["¡Hola! Quiero hacer un pedido en "+$("businessName").textContent+".","",`Nombre: ${$("customer").value.trim()}`,`Servicio: ${$("service").value}`];if($("address").value.trim())lines.push("Dirección/referencia: "+$("address").value.trim());lines.push("","Mi pedido:");cart.forEach(({p,qty})=>lines.push(`• ${qty} x ${p.name} — ${money(Number(p.price)*qty)}`));lines.push("","TOTAL: "+money(total()));if($("note").value.trim())lines.push("","Nota: "+$("note").value.trim());lines.push("","Quedo pendiente de la confirmación. ¡Gracias!");window.open("https://wa.me/"+WHATSAPP_PHONE+"?text="+encodeURIComponent(lines.join("\n")),"_blank","noopener")};
+$("openAdmin").onclick=async()=>{open("adminOverlay");await checkSession()};
+$("loginForm").onsubmit=async e=>{e.preventDefault();status("Iniciando sesión…");let {data,error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error){status("No se pudo iniciar sesión: "+error.message,"error");return}adminUser=data.user;$("password").value="";await showAdmin()};
+async function checkSession(){let {data}=await db.auth.getSession();adminUser=data.session?.user||null;$("loginBox").hidden=!!adminUser;$("adminPanel").hidden=!adminUser;if(adminUser)await showAdmin()}
+async function showAdmin(){$("loginBox").hidden=true;$("adminPanel").hidden=false;status("Sesión iniciada como "+(adminUser?.email||"administrador"),"ok");resetForm();await loadAdmin()}
+$("logout").onclick=async()=>{await db.auth.signOut();adminUser=null;$("loginBox").hidden=false;$("adminPanel").hidden=true;status("Sesión cerrada.")};
+function resetForm(){$("productForm").reset();$("pid").value="";$("pactive").checked=true;$("editorTitle").textContent="Nuevo producto"}
+$("newProduct").onclick=()=>{resetForm();$("editor").hidden=false;$("editor").scrollIntoView({behavior:"smooth"})};$("cancelEdit").onclick=()=>{$("editor").hidden=true;resetForm()};
+async function loadAdmin(){let {data,error}=await db.from("products").select("id,name,description,price,category,image_url,active").order("name");if(error){$("adminProducts").textContent="Error: "+error.message;status("No se pudo cargar la lista: "+error.message,"error");return}if(!data?.length){$("adminProducts").innerHTML='<p class="notice">Todavía no hay productos. Pulsa “Nuevo producto”.</p>';return}$("adminProducts").innerHTML=data.map(p=>`<div class="adminrow"><div><b>${esc(p.name)}</b><small>${esc(p.category||"Sin categoría")} · ${money(p.price)}</small><small>${p.active?"Activo":"Inactivo"}</small></div><div class="rowbtn"><button class="mini" data-edit="${esc(p.id)}">Editar</button><button class="mini" data-toggle="${esc(p.id)}" data-active="${p.active}">${p.active?"Ocultar":"Activar"}</button><button class="mini" data-delete="${esc(p.id)}">Borrar</button></div></div>`).join("");$("adminProducts").querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>edit(b.dataset.edit,data));$("adminProducts").querySelectorAll("[data-toggle]").forEach(b=>b.onclick=()=>toggle(b.dataset.toggle,b.dataset.active!=="true"));$("adminProducts").querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>remove(b.dataset.delete))}
+function edit(id,rows){let p=rows.find(x=>String(x.id)===String(id));if(!p)return;$("pid").value=p.id;$("pname").value=p.name||"";$("pdesc").value=p.description||"";$("pprice").value=p.price;$("pcat").value=p.category||"";$("pimage").value=p.image_url||"";$("pactive").checked=!!p.active;$("editorTitle").textContent="Editar producto";$("editor").hidden=false;$("editor").scrollIntoView({behavior:"smooth"})}
+$("productForm").onsubmit=async e=>{e.preventDefault();if(!adminUser){status("Inicia sesión primero.","error");return}let name=$("pname").value.trim(),category=$("pcat").value.trim(),img=$("pimage").value.trim(),price=Number($("pprice").value);if(!name||!category||!Number.isFinite(price)||price<0){status("Revisa nombre, categoría y precio.","error");return}if(img&&!/^https?:\/\//i.test(img)){status("La foto debe tener un enlace http:// o https://.","error");return}let row={name,description:$("pdesc").value.trim(),price,category,image_url:img||null,active:$("pactive").checked},id=$("pid").value;status("Guardando producto…");let result=id?await db.from("products").update(row).eq("id",id):await db.from("products").insert(row);if(result.error){status("Error al guardar: "+result.error.message,"error");return}status("¡Producto guardado correctamente!","ok");$("editor").hidden=true;resetForm();await loadProducts();await loadAdmin()};
+async function toggle(id,active){let {error}=await db.from("products").update({active}).eq("id",id);if(error){status("Error al cambiar estado: "+error.message,"error");return}status(active?"Producto activado.":"Producto ocultado.","ok");await loadProducts();await loadAdmin()}
+async function remove(id){if(!confirm("¿Seguro que quieres borrar este producto?"))return;let {error}=await db.from("products").delete().eq("id",id);if(error){status("No se pudo borrar: "+error.message,"error");return}status("Producto eliminado.","ok");await loadProducts();await loadAdmin()}
+db.auth.onAuthStateChange((_event,session)=>{adminUser=session?.user||null});
+(async()=>{await settings();await loadProducts();renderCart()})();
+})();
+</script></body></html>rn;}
  await cargarProductos();await cargarAdmin();
 }
 async function eliminar(id){
