@@ -91,6 +91,6 @@ async function toggle(id,active){let {error}=await db.from("products").update({a
 async function remove(id){if(!confirm("¿Seguro que quieres borrar este producto?"))return;let {error}=await db.from("products").delete().eq("id",id);if(error){status("No se pudo borrar: "+error.message,"error");return}status("Producto eliminado.","ok");await loadProducts();await loadAdmin()}
 db.auth.onAuthStateChange((_event,session)=>{adminUser=session?.user||null});
 let installPrompt=null;const installBtn=$("installApp");window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;installBtn.hidden=false});installBtn.onclick=async()=>{if(!installPrompt){alert("En Chrome: menú ⋮ → Instalar aplicación o Añadir a pantalla principal.");return}installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;installBtn.hidden=true};window.addEventListener("appinstalled",()=>{installBtn.hidden=true});if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(err=>console.warn("PWA SW:",err)));
-(async()=>{await settings();await loadProducts();renderCart()})();
+(async()=>{settings().catch(console.warn);await loadProducts();renderCart()})();
 })();
 </script></body></html>
