@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "Pizzería y Fritos Sarahís",
+  "short_name": "Sarahís",
+  "description": "Menú digital de Pizzería y Fritos Sarahís",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#D4AF37",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon-sarahis.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
