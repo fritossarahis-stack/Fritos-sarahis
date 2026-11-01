@@ -58,17 +58,6 @@ async function remove(id){if(!confirm("¿Seguro que quieres borrar este producto
 db.auth.onAuthStateChange((_event,session)=>{adminUser=session?.user||null});
 (async()=>{await settings();await loadProducts();renderCart()})();
 })();
-</script></body></html>rn;}
- await cargarProductos();await cargarAdmin();
-}
-async function eliminar(id){
- if(!confirm("¿Seguro que quieres eliminar este producto?"))return;
- const {error}=await db.from("products").delete().eq("id",id);
- if(error){$("adminMsg").textContent="No se pudo eliminar el producto.";return;}
- await cargarProductos();await cargarAdmin();
-}
-cargarProductos();
-comprobarSesion();
 </script>
 
 <script>
